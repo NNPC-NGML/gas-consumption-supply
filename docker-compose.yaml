@@ -1,36 +1,34 @@
 version: "3.2"
 services:
-  boilerplate:
+  gas_consumption_supply_service:
     build:
       context: .
       dockerfile: Dockerfile
     command: "php artisan serve --host=0.0.0.0"
     volumes:
-      # Re-use local composer cache via host-volume
-      - ~/.composer-docker/cache:/root/.composer/cache:delegated
       - .:/app
     ports:
       - 1010:8000
     networks:
-      - boilerplate_network
+      - gas_consumption_supply_network
 
-  boilerplate_queue:
+  gas_consumption_supply_queue:
     build:
       context: .
       dockerfile: Dockerfile
     command: "php artisan queue:work"
     networks:
-      - boilerplate_network
+      - gas_consumption_supply_network
 
   mysql:
     image: mariadb:10.5.8
     environment:
       - MYSQL_ROOT_PASSWORD=forge
-      - MYSQL_DATABASE=processflow
+      - MYSQL_DATABASE=gas_consumption_supply
       - MYSQL_USER=forge
       - MYSQL_PASSWORD=forge
     networks:
-      - boilerplate_network
+      - gas_consumption_supply_network
   # phpmyadmin
   phpmyadmin:
     image: phpmyadmin
@@ -40,10 +38,10 @@ services:
       - PMA_HOST=mysql
       - PMA_PASSWORD=forge
     networks:
-      - boilerplate_network
+      - gas_consumption_supply_network
     restart: unless-stopped
     volumes:
       - ./:/app
 
 networks:
-  boilerplate_network:
+  gas_consumption_supply_network:
