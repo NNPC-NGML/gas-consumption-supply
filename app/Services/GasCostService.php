@@ -2,37 +2,35 @@
 
 namespace App\Services;
 
-use App\Models\DailyVolume;
+use App\Models\GasCost;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
-class DailyVolumeService
+class GasCostService
 {
     /**
-     * Validate the provided Daily Volume data.
+     * Validate the provided Gas Cost data.
      *
      * @param array $data The data to be validated.
      * @param bool $is_update Indicates if this is an update operation.
      * @return array The validated data.
      * @throws ValidationException If the validation fails.
      */
-    public function validateDailyVolume(array $data, bool $is_update = false): array
+    public function validateGasCost(array $data, bool $is_update = false): array
     {
         // Define validation rules based on whether it's an update or create request
         $rules = $is_update === false ? [
-            'customer_id' => 'required|integer',
-            'customer_site_id' => 'required|integer',
-            'volume' => 'required|numeric|min:0',
-            // 'rate' => 'required|numeric|min:0',
-            // 'amount' => 'required|numeric|min:0',
+            'date_of_entry' => 'required|date',
+            'dollar_cost_per_scf' => 'required|numeric|min:0',
+            'dollar_rate' => 'required|numeric|min:0',
+            'status' => 'required|boolean',
         ] : [
-            'customer_id' => 'sometimes|required|integer',
-            'customer_site_id' => 'sometimes|required|integer',
-            'volume' => 'sometimes|required|numeric|min:0',
-            // 'rate' => 'sometimes|required|numeric|min:0',
-            // 'amount' => 'sometimes|required|numeric|min:0',
+            'date_of_entry' => 'sometimes|required|date',
+            'dollar_cost_per_scf' => 'sometimes|required|numeric|min:0',
+            'dollar_rate' => 'sometimes|required|numeric|min:0',
+            'status' => 'sometimes|required|boolean',
         ];
 
         // Run the validator with the specified rules
@@ -46,45 +44,37 @@ class DailyVolumeService
     }
 
     /**
-     * Get all daily volumes with optional filters and pagination.
+     * Get all gas costs with optional filters and pagination.
      *
-     * This method allows filtering daily volume records based on the provided filters.
-     * It supports date range filters for `created_at` and `updated_at`, as well as
-     * other column-based filters. The result is paginated.
+     * This method allows filtering gas cost records based on the provided filters.
+     * It supports date range filters for `date_of_entry`, as well as other column-based filters.
+     * The result is paginated.
      *
      * @param array $filters An associative array of filters to apply. Supported keys:
-     *                       - 'created_at_from': Filter records where `created_at` is after or on this date.
-     *                       - 'created_at_to': Filter records where `created_at` is before or on this date.
-     *                       - 'updated_at_from': Filter records where `updated_at` is after or on this date.
-     *                       - 'updated_at_to': Filter records where `updated_at` is before or on this date.
+     *                       - 'date_of_entry_from': Filter records where `date_of_entry` is after or on this date.
+     *                       - 'date_of_entry_to': Filter records where `date_of_entry` is before or on this date.
      *                       - Additional keys for filtering other columns.
      * @param int $per_page The number of records to return per page. Defaults to 50.
-     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator A paginated list of daily volumes.
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator A paginated list of gas costs.
      */
     public function getAllWithFilters(array $filters = [], int $per_page = 50)
     {
-        $query = DailyVolume::query();
+        $query = GasCost::query();
 
         // Apply dynamic filters
         foreach ($filters as $key => $value) {
-            if($key !== 'customer_id' && $key !== 'customer_site_id' && $key !== 'created_at_from' && $key !== 'created_at_to' && $key !== 'updated_at_from' && $key !== 'updated_at_to' && $key !== 'volume') {
+            if($key !== 'date_of_entry' && $key !== 'dollar_cost_per_scf' && $key !== 'dollar_rate' && $key !== 'status' && $key !== 'date_of_entry_from' && $key !== 'date_of_entry_to') {
                 continue;
             }
             switch ($key) {
-                case 'created_at_from':
-                    $query->whereDate('created_at', '>=', $value);
+                case 'date_of_entry_from':
+                    $query->whereDate('date_of_entry', '>=', $value);
                     break;
-                case 'created_at_to':
-                    $query->whereDate('created_at', '<=', $value);
-                    break;
-                case 'updated_at_from':
-                    $query->whereDate('updated_at', '>=', $value);
-                    break;
-                case 'updated_at_to':
-                    $query->whereDate('updated_at', '<=', $value);
+                case 'date_of_entry_to':
+                    $query->whereDate('date_of_entry', '<=', $value);
                     break;
                 default:
-                    // Apply other filters directly (e.g., status, customer_id)
+                    // Apply other filters directly (e.g., status)
                     $query->where($key, $value);
                     break;
             }
@@ -94,40 +84,39 @@ class DailyVolumeService
         return $query->paginate($per_page);
     }
 
-
     /**
-     * Get paginated customer daily volumes.
+     * Get paginated gas costs.
      *
      * @param int $per_page Number of records per page.
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
     public function getAll(int $per_page = 50)
     {
-        return DailyVolume::paginate($per_page);
+        return GasCost::paginate($per_page);
     }
 
     /**
-     * Find a daily volume entry by its ID.
+     * Find a gas cost entry by its ID.
      *
-     * @param int $id The ID of the daily volume entry.
-     * @return DailyVolume The found daily volume entry.
+     * @param int $id The ID of the gas cost entry.
+     * @return GasCost The found gas cost entry.
      * @throws \Illuminate\Database\Eloquent\ModelNotFoundException If no entry is found.
      */
-    public function getById(int $id): DailyVolume
+    public function getById(int $id): GasCost
     {
-        return DailyVolume::findOrFail($id);
+        return GasCost::findOrFail($id);
     }
 
     /**
-     * Create a new daily volume entry.
+     * Create a new gas cost entry.
      *
-     * @param array $data The data for creating the daily volume.
-     * @return DailyVolume The newly created daily volume entry.
+     * @param array $data The data for creating the gas cost.
+     * @return GasCost The newly created gas cost entry.
      * @throws \Throwable
      */
-    public function create(array $data): DailyVolume
+    public function create(array $data): GasCost
     {
-        Log::info('Starting daily volume creation process', ['data' => $data]);
+        Log::info('Starting gas cost creation process', ['data' => $data]);
 
         return DB::transaction(function () use ($data) {
             try {
@@ -148,14 +137,13 @@ class DailyVolumeService
                     // Merge structured data with the main input data
                     $data = array_merge($data, $structuredData);
                 }
+                // Validate and create the Gas Cost entry
+                $validatedData = $this->validateGasCost($data);
+                $gasCostCreated = GasCost::create($validatedData);
 
-                // Validate and create the Daily Volume entry
-                $validatedData = $this->validateDailyVolume($data);
-                $dailyVolumeCreated = DailyVolume::create($validatedData);
-
-                return $dailyVolumeCreated;
+                return $gasCostCreated;
             } catch (\Throwable $e) {
-                Log::error('Unexpected error during daily volume creation: ' . $e->getMessage(), [
+                Log::error('Unexpected error during gas cost creation: ' . $e->getMessage(), [
                     'exception' => $e,
                     'trace' => $e->getTraceAsString(),
                 ]);
@@ -164,16 +152,15 @@ class DailyVolumeService
         });
     }
 
-
     /**
-     * Update an existing Daily Volume record.
+     * Update an existing gas cost record.
      *
      * @param array $data The data to update the record with.
-     * @return DailyVolume The updated Daily Volume record.
+     * @return GasCost The updated gas cost record.
      * @throws \Illuminate\Database\Eloquent\ModelNotFoundException If no record is found with the provided ID.
      * @throws ValidationException If the validation fails.
      */
-    public function update(array $data): DailyVolume
+    public function update(array $data): GasCost
     {
         // Retrieve the ID from the provided data
         $id = $data['id'] ?? null;
@@ -182,12 +169,9 @@ class DailyVolumeService
             throw new \InvalidArgumentException('ID is required for update');
         }
 
-        Log::info('Starting daily volume update process', ['id' => $id, 'data' => $data]);
+        Log::info('Starting gas cost update process', ['id' => $id, 'data' => $data]);
 
         try {
-            // Find the existing Daily Volume record by its ID
-            $dailyVolume = $this->getById($id);
-
             // Check if form_field_answers is provided in JSON format and decode if necessary
             if (isset($data['form_field_answers'])) {
                 // Decode the JSON data
@@ -206,17 +190,20 @@ class DailyVolumeService
                 $data = array_merge($data, $structuredData);
             }
 
+            // Find the existing Gas Cost record by its ID
+            $gasCost = $this->getById($id);
+
             // Validate the data before performing the update
-            $validatedData = $this->validateDailyVolume($data, true);
+            $validatedData = $this->validateGasCost($data, true);
 
-            // Perform the update on the existing Daily Volume record
-            $dailyVolume->update($validatedData);
+            // Perform the update on the existing Gas Cost record
+            $gasCost->update($validatedData);
 
-            Log::info('Daily volume updated successfully', ['id' => $dailyVolume->id]);
+            Log::info('Gas cost updated successfully', ['id' => $gasCost->id]);
 
-            return $dailyVolume;
+            return $gasCost;
         } catch (\Throwable $e) {
-            Log::error('Unexpected error during daily volume update: ' . $e->getMessage(), [
+            Log::error('Unexpected error during gas cost update: ' . $e->getMessage(), [
                 'exception' => $e,
                 'trace' => $e->getTraceAsString(),
             ]);

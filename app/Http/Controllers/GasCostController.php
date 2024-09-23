@@ -2,35 +2,35 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\DailyVolumeResource;
-use App\Services\DailyVolumeService;
+use App\Http\Resources\GasCostResource;
+use App\Services\GasCostService;
 use Illuminate\Http\Request;
 
-class DailyVolumeController extends Controller
+class GasCostController extends Controller
 {
     /**
-     * The DailyVolumeService instance.
+     * The GasCostService instance.
      *
-     * @var DailyVolumeService
+     * @var GasCostService
      */
-    protected DailyVolumeService $dailyVolumeService;
+    protected GasCostService $gasCostService;
 
     /**
-     * DailyVolumeController constructor.
+     * GasCostController constructor.
      *
-     * @param DailyVolumeService $dailyVolumeService
+     * @param GasCostService $gasCostService
      */
-    public function __construct(DailyVolumeService $dailyVolumeService)
+    public function __construct(GasCostService $gasCostService)
     {
-        $this->dailyVolumeService = $dailyVolumeService;
+        $this->gasCostService = $gasCostService;
     }
 
     /**
      * @OA\Get(
-     *     path="/api/daily-volumes",
-     *     tags={"Customer daily volumes"},
-     *     summary="Get a list of daily volumes with filters and pagination",
-     *     description="Fetches a list of daily volumes, with optional filtering based on fields in the daily volumes table, and supports pagination.",
+     *     path="/api/gas-costs",
+     *     tags={"Gas Costs"},
+     *     summary="Get a list of gas costs with filters and pagination",
+     *     description="Fetches a list of gas costs, with optional filtering based on fields in the gas costs table, and supports pagination.",
      *
      *     @OA\Parameter(
      *         name="page",
@@ -56,31 +56,6 @@ class DailyVolumeController extends Controller
      *         description="Filter by end date for created_at",
      *         @OA\Schema(type="string", format="date")
      *     ),
-     *     @OA\Parameter(
-     *         name="updated_at_from",
-     *         in="query",
-     *         description="Filter by start date for updated_at",
-     *         @OA\Schema(type="string", format="date")
-     *     ),
-     *     @OA\Parameter(
-     *         name="updated_at_to",
-     *         in="query",
-     *         description="Filter by end date for updated_at",
-     *         @OA\Schema(type="string", format="date")
-     *     ),
-     *     @OA\Parameter(
-     *         name="status",
-     *         in="query",
-     *         description="Filter by status",
-     *         @OA\Schema(type="string")
-     *     ),
-     *     @OA\Parameter(
-     *         name="customer_id",
-     *         in="query",
-     *         description="Filter by customer ID",
-     *         @OA\Schema(type="integer")
-     *     ),
-     *
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
@@ -90,7 +65,7 @@ class DailyVolumeController extends Controller
      *                 property="pagination",
      *                 type="object",
      *                 @OA\Property(property="current_page", type="integer", example=1),
-     *                 @OA\Property(property="next_page_url", type="string", nullable=true, example="http://example.com/api/daily-volumes?page=2"),
+     *                 @OA\Property(property="next_page_url", type="string", nullable=true, example="http://example.com/api/gas-costs?page=2"),
      *                 @OA\Property(property="prev_page_url", type="string", nullable=true, example=null),
      *                 @OA\Property(property="per_page", type="integer", example=50),
      *                 @OA\Property(property="total", type="integer", example=200),
@@ -99,7 +74,7 @@ class DailyVolumeController extends Controller
      *             @OA\Property(
      *                 property="data",
      *                 type="array",
-     *                 @OA\Items(ref="#/components/schemas/DailyVolume")
+     *                 @OA\Items(ref="#/components/schemas/GasCost")
      *             )
      *         )
      *     ),
@@ -118,26 +93,21 @@ class DailyVolumeController extends Controller
     public function index(Request $request)
     {
         try {
-            // Get all request parameters for filtering
             $filters = $request->all();
-
-            // Extract 'per_page' if provided, default to 50
             $per_page = $request->input('per_page', default: 50);
 
-            // Pass the filters and per_page to the service for query building
-            $dailyVolumes = $this->dailyVolumeService->getAllWithFilters($filters, $per_page);
+            $gasCosts = $this->gasCostService->getAllWithFilters($filters, $per_page);
 
-            // Return the paginated results with additional pagination metadata
-            return DailyVolumeResource::collection($dailyVolumes)
+            return GasCostResource::collection($gasCosts)
                 ->additional([
                     'status' => 'success',
                     'pagination' => [
-                        'current_page' => $dailyVolumes->currentPage(),
-                        'next_page_url' => $dailyVolumes->nextPageUrl(),
-                        'prev_page_url' => $dailyVolumes->previousPageUrl(),
-                        'per_page' => $dailyVolumes->perPage(),
-                        'total' => $dailyVolumes->total(),
-                        'last_page' => $dailyVolumes->lastPage(),
+                        'current_page' => $gasCosts->currentPage(),
+                        'next_page_url' => $gasCosts->nextPageUrl(),
+                        'prev_page_url' => $gasCosts->previousPageUrl(),
+                        'per_page' => $gasCosts->perPage(),
+                        'total' => $gasCosts->total(),
+                        'last_page' => $gasCosts->lastPage(),
                     ]
                 ])
                 ->response()
@@ -150,19 +120,18 @@ class DailyVolumeController extends Controller
         }
     }
 
-
     /**
-     * Get details of a specific Daily Volume record by ID.
+     * Get details of a specific GasCost record by ID.
      *
      * @OA\Get(
-     *     path="/api/daily-volumes/{id}",
-     *     tags={"Daily Volumes"},
-     *     summary="Get details of a specific Daily Volume record",
-     *     description="Fetches details of a specific Daily Volume record by ID.",
+     *     path="/api/gas-costs/{id}",
+     *     tags={"Gas Costs"},
+     *     summary="Get details of a specific GasCost record",
+     *     description="Fetches details of a specific GasCost record by ID.",
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
-     *         description="ID of the Daily Volume record",
+     *         description="ID of the GasCost record",
      *         required=true,
      *         @OA\Schema(type="integer")
      *     ),
@@ -171,29 +140,27 @@ class DailyVolumeController extends Controller
      *         description="Successful operation",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="string", example="success"),
-     *             @OA\Property(ref="#/components/schemas/DailyVolume")
+     *             @OA\Property(ref="#/components/schemas/GasCost")
      *         )
      *     ),
      *     @OA\Response(response=404, description="Not Found")
      * )
      *
-     * @param int $id The ID of the Daily Volume record.
+     * @param int $id The ID of the GasCost record.
      * @return \Illuminate\Http\JsonResponse
      */
     public function show($id)
     {
         try {
-            // Retrieve Daily Volume by ID
-            $dailyVolume = $this->dailyVolumeService->getById($id);
+            $gasCost = $this->gasCostService->getById($id);
 
-            // Return a JsonResponse
-            return (new DailyVolumeResource($dailyVolume))
+            return (new GasCostResource($gasCost))
                 ->additional(['status' => 'success'])
                 ->response();
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Daily Volume record not found',
+                'message' => 'Gas Cost record not found',
             ], 404);
         } catch (\Throwable $th) {
             return response()->json([
@@ -204,45 +171,45 @@ class DailyVolumeController extends Controller
     }
 
     /**
-     * Delete a specific Daily Volume record by ID.
+     * Delete a specific GasCost record by ID.
      *
      * @OA\Delete(
-     *     path="/api/daily-volumes/{id}",
-     *     tags={"Daily Volumes"},
-     *     summary="Delete a specific Daily Volume record",
-     *     description="Deletes a specific Daily Volume record by ID.",
+     *     path="/api/gas-costs/{id}",
+     *     tags={"Gas Costs"},
+     *     summary="Delete a specific GasCost record",
+     *     description="Deletes a specific GasCost record by ID.",
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
-     *         description="ID of the Daily Volume record",
+     *         description="ID of the GasCost record",
      *         required=true,
      *         @OA\Schema(type="integer")
      *     ),
      *     @OA\Response(
      *         response=204,
-     *         description="Daily Volume record deleted successfully"
+     *         description="Gas Cost record deleted successfully"
      *     ),
      *     @OA\Response(response=404, description="Not Found"),
      *     @OA\Response(response=400, description="Bad Request")
      * )
      *
-     * @param int $id The ID of the Daily Volume record.
+     * @param int $id The ID of the GasCost record.
      * @return \Illuminate\Http\JsonResponse
      */
     public function destroy($id)
     {
         try {
-            $dailyVolume = $this->dailyVolumeService->getById($id);
-            $dailyVolume->delete();
+            $gasCost = $this->gasCostService->getById($id);
+            $gasCost->delete();
 
             return response()->json([
                 'status' => 'success',
-                'message' => 'Daily Volume record deleted successfully'
+                'message' => 'Gas Cost record deleted successfully'
             ], 204);
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Daily Volume record not found',
+                'message' => 'Gas Cost record not found',
             ], 404);
         } catch (\Throwable $th) {
             return response()->json([
