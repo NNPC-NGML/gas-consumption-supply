@@ -13,7 +13,7 @@ abstract class TestCase extends BaseTestCase
     public function actingAsAuthenticatedTestUser()
     {
         Http::fake([
-            env("USERS_MS") . '/*' => Http::response('ok', 200),
+            env("USERS_MS") . '/*' => Http::response(["id"=> 1], 200),
         ]);
 
     }

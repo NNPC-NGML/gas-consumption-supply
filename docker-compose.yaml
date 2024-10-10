@@ -8,7 +8,7 @@ services:
     volumes:
       - .:/app
     ports:
-      - 1010:8000
+      - 1047:8000
     networks:
       - gas_consumption_supply_network
 
@@ -20,28 +20,28 @@ services:
     networks:
       - gas_consumption_supply_network
 
-  mysql:
+  gas_consumption_supply_database:
     image: mariadb:10.5.8
     environment:
-      - MYSQL_ROOT_PASSWORD=forge
-      - MYSQL_DATABASE=gas_consumption_supply
+      - MYSQL_ROOT_PASSWORD=Ubuxa##99
+      - MYSQL_DATABASE=forge
       - MYSQL_USER=forge
-      - MYSQL_PASSWORD=forge
+      - MYSQL_PASSWORD=Ubuxa##99
     networks:
       - gas_consumption_supply_network
   # phpmyadmin
   phpmyadmin:
     image: phpmyadmin
     ports:
-      - "1012:80"
+      - 1048:80
     environment:
-      - PMA_HOST=mysql
-      - PMA_PASSWORD=forge
+      - PMA_HOST=gas_consumption_supply_database
+      - PMA_PASSWORD=Ubuxa##99
     networks:
       - gas_consumption_supply_network
     restart: unless-stopped
     volumes:
-      - ./:/app
+      - .:/app
 
 networks:
   gas_consumption_supply_network:
