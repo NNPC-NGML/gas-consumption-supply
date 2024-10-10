@@ -1,4 +1,4 @@
-name: Laravel
+name: gas-test
 
 on:
   push:
@@ -22,4 +22,6 @@ jobs:
     - name: Directory Permissions
       run: chmod -R 777 storage bootstrap/cache
     - name: Execute tests (Unit and Feature tests) via PHPUnit
-      run: php artisan test
+      run: |
+        php artisan test
+        echo "Exit code: $?"

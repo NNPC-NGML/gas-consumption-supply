@@ -1,4 +1,4 @@
-name: nnpc_service_name_placeholder_deploy
+name: nnpc_gas_deploy
 
 on:
   # push:
@@ -10,7 +10,7 @@ on:
     types: [closed]
 
 jobs:
-  deploy-service_name_placeholder-test:
+  deploy-gas-test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -28,9 +28,11 @@ jobs:
         run: CI=false composer clear-cache && CI=false composer install && CI=false php artisan key:generate
 
       - name: Run Tests
-        run: CI=false php artisan test
+        run: |
+          CI=false php artisan test
+          echo "Exit code: $?"
 
-  deploy-service_name_placeholder-dev:
+  deploy-gas-dev:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -104,7 +106,7 @@ jobs:
         run: |
           sed -i -e 's:/public/index.php:/index.php:g' public/index.php &&
           sed -i -e 's:/../vendor/autoload.php:/vendor/autoload.php:g' public/index.php &&
-          sed -i -e 's:DB_DATABASE=forge:DB_DATABASE=skillz_nnpc_service_name_placeholder:g' .env &&
+          sed -i -e 's:DB_DATABASE=forge:DB_DATABASE=skillz_nnpc_gas:g' .env &&
           sed -i -e 's:DB_USERNAME=forge:DB_USERNAME=skillz_nnpc:g' .env  &&
           sed -i -e 's:/../bootstrap/app.php:/bootstrap/app.php:g' public/index.php &&
           sed -i -e 's:DB_PASSWORD=forge:DB_PASSWORD=nnpcNGML:g' .env &&
@@ -123,8 +125,8 @@ jobs:
           rsync --delete -va -e 'ssh -p 7822 -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no' \
             app database phpunit.xml storage vendor artisan .env tests bootstrap \
             composer.json resources composer.lock routes config package.json \
-            public/ public skillz@185.160.67.60:nnpc/api/service_name_placeholder
+            public/ public skillz@103.72.76.68:nnpc/api/gas
 # change service_name_placeholder to the name of your service eg automator etc  
       - name: SSH and effect migration
         run: |
-          ssh -p 7822 -i ~/.ssh/id_rsa -t skillz@185.160.67.60 "cd nnpc/api/service_name_placeholder && php artisan migrate && php artisan db:seed "
+          ssh -p 7822 -i ~/.ssh/id_rsa -t skillz@103.72.76.68 "cd nnpc/api/gas && php artisan migrate && php artisan db:seed "
