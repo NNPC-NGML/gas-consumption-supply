@@ -2,6 +2,9 @@
 
 namespace App\Services;
 
+use App\Http\Resources\DailyVolumeResource;
+use App\Jobs\GasConsumption\GasConsumptionCreated;
+use App\Jobs\GasConsumption\GasConsumptionUpdated;
 use App\Models\DailyVolume;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -122,10 +125,10 @@ class DailyVolumeService
      * Create a new daily volume entry.
      *
      * @param array $data The data for creating the daily volume.
-     * @return DailyVolume The newly created daily volume entry.
+     * @return DailyVolumeResource The resource of the newly created daily volume entry.
      * @throws \Throwable
      */
-    public function create(array $data): DailyVolume
+    public function create(array $data): DailyVolumeResource
     {
         Log::info('Starting daily volume creation process', ['data' => $data]);
 
@@ -151,9 +154,27 @@ class DailyVolumeService
 
                 // Validate and create the Daily Volume entry
                 $validatedData = $this->validateDailyVolume($data);
-                $dailyVolumeCreated = DailyVolume::create($validatedData);
+                $dailyVolume = DailyVolume::create($validatedData);
 
-                return $dailyVolumeCreated;
+                // Load relationships
+                $dailyVolume->refresh();
+                $dailyVolume->load(['customer', 'customer_site']);
+
+                // Create a new Daily Volume resource
+                $resource = new DailyVolumeResource($dailyVolume);
+
+                $dailyVolumeQueues = config("nnpcreusable.GAS_CONSUMPTION_CREATED");
+                if (is_array($dailyVolumeQueues) && !empty($dailyVolumeQueues)) {
+                    foreach ($dailyVolumeQueues as $queue) {
+                        $queue = trim($queue);
+                        if (!empty($queue)) {
+                            Log::info("Dispatching daily volume creation event to queue: " . $queue);
+                            GasConsumptionCreated::dispatch($resource)->onQueue($queue);
+                        }
+                    }
+                }
+
+                return $resource;
             } catch (\Throwable $e) {
                 Log::error('Unexpected error during daily volume creation: ' . $e->getMessage(), [
                     'exception' => $e,
@@ -169,11 +190,11 @@ class DailyVolumeService
      * Update an existing Daily Volume record.
      *
      * @param array $data The data to update the record with.
-     * @return DailyVolume The updated Daily Volume record.
+     * @return DailyVolumeResource The updated Daily Volume record.
      * @throws \Illuminate\Database\Eloquent\ModelNotFoundException If no record is found with the provided ID.
      * @throws ValidationException If the validation fails.
      */
-    public function update(array $data): DailyVolume
+    public function update(array $data): DailyVolumeResource
     {
         // Retrieve the ID from the provided data
         $id = $data['id'] ?? null;
@@ -212,9 +233,26 @@ class DailyVolumeService
             // Perform the update on the existing Daily Volume record
             $dailyVolume->update($validatedData);
 
+            // Load relationships
+            $dailyVolume->load(['customer', 'customer_site']);
+
+            // Create a new Daily Volume resource
+            $resource = new DailyVolumeResource($dailyVolume);
+
+            $dailyVolumeQueues = config("nnpcreusable.GAS_CONSUMPTION_UPDATED");
+            if (is_array($dailyVolumeQueues) && !empty($dailyVolumeQueues)) {
+                foreach ($dailyVolumeQueues as $queue) {
+                    $queue = trim($queue);
+                    if (!empty($queue)) {
+                        Log::info("Dispatching daily volume update event to queue: " . $queue);
+                        GasConsumptionUpdated::dispatch($resource)->onQueue($queue);
+                    }
+                }
+            }
+
             Log::info('Daily volume updated successfully', ['id' => $dailyVolume->id]);
 
-            return $dailyVolume;
+            return $resource;
         } catch (\Throwable $e) {
             Log::error('Unexpected error during daily volume update: ' . $e->getMessage(), [
                 'exception' => $e,

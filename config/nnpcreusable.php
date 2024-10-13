@@ -61,4 +61,8 @@ return [
 
     'TAG_CREATED' => explode(",", env('TAG_CREATED', '')),
 
+    'GAS_CONSUMPTION_CREATED' => explode(",", env('GAS_CONSUMPTION_CREATED', '')),
+    'GAS_CONSUMPTION_UPDATED' => explode(",", env('GAS_CONSUMPTION_UPDATED', '')),
+    'GAS_CONSUMPTION_DELETED' => explode(",", env('GAS_CONSUMPTION_DELETED', '')),
+
 ];

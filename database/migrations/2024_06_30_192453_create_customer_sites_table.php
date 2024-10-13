@@ -20,6 +20,7 @@ return new class extends Migration
             $table->integer('site_state_id');
             $table->integer('site_lga_id');
             $table->integer('site_zone_id');
+            $table->string('rate')->nullable()->comment("this holds the value agreed between both parties");
             $table->boolean('is_active')->default(0);
             $table->timestamps();
         });

@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Skillz\Nnpcreusable\Models\Customer;
+use Skillz\Nnpcreusable\Models\CustomerSite;
 
 class DailyVolume extends Model
 {
@@ -16,4 +18,14 @@ class DailyVolume extends Model
         'customer_site_id' => 'integer',
         'volume' => 'float',
     ];
+
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class);
+    }
+
+    public function customer_site()
+    {
+        return $this->belongsTo(CustomerSite::class);
+    }
 }
