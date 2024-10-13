@@ -9,9 +9,9 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
  * @OA\Schema(
- *     schema="CustomerDdqExisting",
+ *     schema="DailyVolume",
  *     type="object",
- *     title="Customer DDQ Existing",
+ *     title="Daily Volume",
  *     @OA\Property(property="id", type="integer", example=1, description="ID of the existing Daily Volume"),
  *     @OA\Property(property="customer_id", type="integer", example=1, description="ID of the customer"),
  *     @OA\Property(property="customer_site_id", type="integer", example=1, description="ID of the customer site"),
