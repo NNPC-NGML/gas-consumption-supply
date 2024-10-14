@@ -1,7 +1,7 @@
 .PHONY: help ps build build-prod start fresh fresh-prod stop restart destroy \
 	cache cache-clear migrate migrate migrate-fresh tests tests-html
 
-CONTAINER_PHP=boilerplate_docker_container
+CONTAINER_PHP=gas_consumption_supply_service
 
 
 help: ## Print help.
