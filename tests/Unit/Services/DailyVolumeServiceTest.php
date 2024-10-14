@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Services;
 
+use App\Http\Resources\DailyVolumeResource;
 use App\Models\DailyVolume;
 use App\Services\DailyVolumeService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -80,7 +81,7 @@ class DailyVolumeServiceTest extends TestCase
 
         $dailyVolume = $service->create($data);
 
-        $this->assertInstanceOf(DailyVolume::class, $dailyVolume);
+        $this->assertInstanceOf(DailyVolumeResource::class, $dailyVolume);
         $this->assertEquals($data['customer_id'], $dailyVolume->customer_id);
         $this->assertEquals($data['customer_site_id'], $dailyVolume->customer_site_id);
     }
