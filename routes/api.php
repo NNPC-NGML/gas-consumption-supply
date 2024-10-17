@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\DailyVolumeController;
 use App\Http\Controllers\GasCostController;
+use App\Http\Controllers\GasSituationReportController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TestController;
@@ -28,6 +29,9 @@ Route::middleware('scope.user')->group(function () {
     Route::get('gas-costs', [GasCostController::class, 'index']);
     Route::get('gas-costs/{id}', [GasCostController::class, 'show']);
     Route::delete('gas-costs/{id}', [GasCostController::class, 'destroy']);
+    Route::get('gas-situation-reports', [GasSituationReportController::class, 'index']);
+    Route::get('gas-situation-reports/{id}', [GasSituationReportController::class, 'show']);
+    Route::delete('gas-situation-reports/{id}', [GasSituationReportController::class, 'destroy']);
 });
 
 

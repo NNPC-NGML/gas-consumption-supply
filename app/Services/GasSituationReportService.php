@@ -2,42 +2,43 @@
 
 namespace App\Services;
 
-use App\Http\Resources\DailyVolumeResource;
+use App\Http\Resources\GasSituationReportResource;
 use App\Jobs\GasConsumption\GasConsumptionCreated;
 use App\Jobs\GasConsumption\GasConsumptionUpdated;
-use App\Models\DailyVolume;
+use App\Models\GasSituationReport;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
-class DailyVolumeService
+class GasSituationReportService
 {
     /**
-     * Validate the provided Daily Volume data.
+     * Validate the provided Gas Situation Report data.
      *
      * @param array $data The data to be validated.
      * @param bool $is_update Indicates if this is an update operation.
      * @return array The validated data.
      * @throws ValidationException If the validation fails.
      */
-    public function validateDailyVolume(array $data, bool $is_update = false): array
+    public function validateGasSituationReport(array $data, bool $is_update = false): array
     {
         // Define validation rules based on whether it's an update or create request
         $rules = $is_update === false ? [
             'customer_id' => 'required|integer',
             'customer_site_id' => 'required|integer',
-            'volume' => 'required|numeric|min:0',
-            'remark' => 'nullable|string',
-            // 'rate' => 'required|numeric|min:0',
-            // 'amount' => 'required|numeric|min:0',
+            'inlet_pressure' => 'required|numeric|min:0',
+            'outlet_pressure' => 'required|numeric|min:0',
+            'allocation' => 'required|numeric|min:0',
+            'nomination' => 'required|numeric|min:0',
         ] : [
             'customer_id' => 'sometimes|required|integer',
             'customer_site_id' => 'sometimes|required|integer',
             'volume' => 'sometimes|required|numeric|min:0',
-            'remark' => 'sometimes|nullable|string',
-            // 'rate' => 'sometimes|required|numeric|min:0',
-            // 'amount' => 'sometimes|required|numeric|min:0',
+            'inlet_pressure' => 'sometimes|required|numeric|min:0',
+            'outlet_pressure' => 'sometimes|required|numeric|min:0',
+            'allocation' => 'sometimes|required|numeric|min:0',
+            'nomination' => 'sometimes|required|numeric|min:0',
         ];
 
         // Run the validator with the specified rules
@@ -51,9 +52,9 @@ class DailyVolumeService
     }
 
     /**
-     * Get all daily volumes with optional filters and pagination.
+     * Get all Gas Situation Reports with optional filters and pagination.
      *
-     * This method allows filtering daily volume records based on the provided filters.
+     * This method allows filtering Gas Situation Report records based on the provided filters.
      * It supports date range filters for `created_at` and `updated_at`, as well as
      * other column-based filters. The result is paginated.
      *
@@ -64,11 +65,11 @@ class DailyVolumeService
      *                       - 'updated_at_to': Filter records where `updated_at` is before or on this date.
      *                       - Additional keys for filtering other columns.
      * @param int $per_page The number of records to return per page. Defaults to 50.
-     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator A paginated list of daily volumes.
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator A paginated list of Gas Situation Reports.
      */
     public function getAllWithFilters(array $filters = [], int $per_page = 50)
     {
-        $query = DailyVolume::query();
+        $query = GasSituationReport::query();
 
         // Apply dynamic filters
         foreach ($filters as $key => $value) {
@@ -101,38 +102,38 @@ class DailyVolumeService
 
 
     /**
-     * Get paginated customer daily volumes.
+     * Get paginated customer Gas Situation Reports.
      *
      * @param int $per_page Number of records per page.
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
     public function getAll(int $per_page = 50)
     {
-        return DailyVolume::paginate($per_page);
+        return GasSituationReport::paginate($per_page);
     }
 
     /**
-     * Find a daily volume entry by its ID.
+     * Find a Gas Situation Report entry by its ID.
      *
-     * @param int $id The ID of the daily volume entry.
-     * @return DailyVolume The found daily volume entry.
+     * @param int $id The ID of the Gas Situation Report entry.
+     * @return GasSituationReport The found Gas Situation Report entry.
      * @throws \Illuminate\Database\Eloquent\ModelNotFoundException If no entry is found.
      */
-    public function getById(int $id): DailyVolume
+    public function getById(int $id): GasSituationReport
     {
-        return DailyVolume::findOrFail($id);
+        return GasSituationReport::findOrFail($id);
     }
 
     /**
-     * Create a new daily volume entry.
+     * Create a new Gas Situation Report entry.
      *
-     * @param array $data The data for creating the daily volume.
-     * @return DailyVolumeResource The resource of the newly created daily volume entry.
+     * @param array $data The data for creating the Gas Situation Report.
+     * @return GasSituationReportResource The resource of the newly created Gas Situation Report entry.
      * @throws \Throwable
      */
-    public function create(array $data): DailyVolumeResource
+    public function create(array $data): GasSituationReportResource
     {
-        Log::info('Starting daily volume creation process', ['data' => $data]);
+        Log::info('Starting Gas Situation Report creation process', ['data' => $data]);
 
         return DB::transaction(function () use ($data) {
             try {
@@ -154,23 +155,23 @@ class DailyVolumeService
                     $data = array_merge($data, $structuredData);
                 }
 
-                // Validate and create the Daily Volume entry
-                $validatedData = $this->validateDailyVolume($data);
-                $dailyVolume = DailyVolume::create($validatedData);
+                // Validate and create the Gas Situation Report entry
+                $validatedData = $this->validateGasSituationReport($data);
+                $GasSituationReport = GasSituationReport::create($validatedData);
 
                 // Load relationships
-                $dailyVolume->refresh();
-                $dailyVolume->load(['customer', 'customer_site']);
+                $GasSituationReport->refresh();
+                $GasSituationReport->load(['customer', 'customer_site']);
 
-                // Create a new Daily Volume resource
-                $resource = new DailyVolumeResource($dailyVolume);
+                // Create a new Gas Situation Report resource
+                $resource = new GasSituationReportResource($GasSituationReport);
 
-                $dailyVolumeQueues = config("nnpcreusable.GAS_CONSUMPTION_CREATED");
-                if (is_array($dailyVolumeQueues) && !empty($dailyVolumeQueues)) {
-                    foreach ($dailyVolumeQueues as $queue) {
+                $GasSituationReportQueues = config("nnpcreusable.GAS_SITUATION_REPORT_CREATED");
+                if (is_array($GasSituationReportQueues) && !empty($GasSituationReportQueues)) {
+                    foreach ($GasSituationReportQueues as $queue) {
                         $queue = trim($queue);
                         if (!empty($queue)) {
-                            Log::info("Dispatching daily volume creation event to queue: " . $queue);
+                            Log::info("Dispatching Gas Situation Report creation event to queue: " . $queue);
                             GasConsumptionCreated::dispatch($resource)->onQueue($queue);
                         }
                     }
@@ -178,7 +179,7 @@ class DailyVolumeService
 
                 return $resource;
             } catch (\Throwable $e) {
-                Log::error('Unexpected error during daily volume creation: ' . $e->getMessage(), [
+                Log::error('Unexpected error during Gas Situation Report creation: ' . $e->getMessage(), [
                     'exception' => $e,
                     'trace' => $e->getTraceAsString(),
                 ]);
@@ -189,14 +190,14 @@ class DailyVolumeService
 
 
     /**
-     * Update an existing Daily Volume record.
+     * Update an existing Gas Situation Report record.
      *
      * @param array $data The data to update the record with.
-     * @return DailyVolumeResource The updated Daily Volume record.
+     * @return GasSituationReportResource The updated Gas Situation Report record.
      * @throws \Illuminate\Database\Eloquent\ModelNotFoundException If no record is found with the provided ID.
      * @throws ValidationException If the validation fails.
      */
-    public function update(array $data): DailyVolumeResource
+    public function update(array $data): GasSituationReportResource
     {
         // Retrieve the ID from the provided data
         $id = $data['id'] ?? null;
@@ -205,11 +206,11 @@ class DailyVolumeService
             throw new \InvalidArgumentException('ID is required for update');
         }
 
-        Log::info('Starting daily volume update process', ['id' => $id, 'data' => $data]);
+        Log::info('Starting Gas Situation Report update process', ['id' => $id, 'data' => $data]);
 
         try {
-            // Find the existing Daily Volume record by its ID
-            $dailyVolume = $this->getById($id);
+            // Find the existing Gas Situation Report record by its ID
+            $GasSituationReport = $this->getById($id);
 
             // Check if form_field_answers is provided in JSON format and decode if necessary
             if (isset($data['form_field_answers'])) {
@@ -230,33 +231,33 @@ class DailyVolumeService
             }
 
             // Validate the data before performing the update
-            $validatedData = $this->validateDailyVolume($data, true);
+            $validatedData = $this->validateGasSituationReport($data, true);
 
-            // Perform the update on the existing Daily Volume record
-            $dailyVolume->update($validatedData);
+            // Perform the update on the existing Gas Situation Report record
+            $GasSituationReport->update($validatedData);
 
             // Load relationships
-            $dailyVolume->load(['customer', 'customer_site']);
+            $GasSituationReport->load(['customer', 'customer_site']);
 
-            // Create a new Daily Volume resource
-            $resource = new DailyVolumeResource($dailyVolume);
+            // Create a new Gas Situation Report resource
+            $resource = new GasSituationReportResource($GasSituationReport);
 
-            $dailyVolumeQueues = config("nnpcreusable.GAS_CONSUMPTION_UPDATED");
-            if (is_array($dailyVolumeQueues) && !empty($dailyVolumeQueues)) {
-                foreach ($dailyVolumeQueues as $queue) {
+            $GasSituationReportQueues = config("nnpcreusable.GAS_SITUATION_REPORT_UPDATED");
+            if (is_array($GasSituationReportQueues) && !empty($GasSituationReportQueues)) {
+                foreach ($GasSituationReportQueues as $queue) {
                     $queue = trim($queue);
                     if (!empty($queue)) {
-                        Log::info("Dispatching daily volume update event to queue: " . $queue);
+                        Log::info("Dispatching Gas Situation Report update event to queue: " . $queue);
                         GasConsumptionUpdated::dispatch($resource)->onQueue($queue);
                     }
                 }
             }
 
-            Log::info('Daily volume updated successfully', ['id' => $dailyVolume->id]);
+            Log::info('Gas Situation Report updated successfully', ['id' => $GasSituationReport->id]);
 
             return $resource;
         } catch (\Throwable $e) {
-            Log::error('Unexpected error during daily volume update: ' . $e->getMessage(), [
+            Log::error('Unexpected error during Gas Situation Report update: ' . $e->getMessage(), [
                 'exception' => $e,
                 'trace' => $e->getTraceAsString(),
             ]);

@@ -36,6 +36,7 @@ class DailyVolumeServiceTest extends TestCase
             'customer_id' => 1,
             'customer_site_id' => 1,
             'volume' => 1000.00,
+            'remark' => 'some remark',
         ];
 
         $validatedData = $service->validateDailyVolume($data);
@@ -58,6 +59,7 @@ class DailyVolumeServiceTest extends TestCase
             'customer_id' => null,
             'customer_site_id' => '',
             'volume' => -100.00, // invalid
+            'remark' => 'some remark',
         ];
 
         $service->validateDailyVolume($data);
@@ -76,6 +78,7 @@ class DailyVolumeServiceTest extends TestCase
             'customer_id' => 1,
             'customer_site_id' => 1,
             'volume' => 1000.00,
+            'remark' => 'some remark',
             'form_field_answers' => json_encode([['key' => 'extra_data', 'value' => 'some_value']]),
         ];
 
@@ -101,6 +104,7 @@ class DailyVolumeServiceTest extends TestCase
             'customer_id' => 1,
             'customer_site_id' => 1,
             'volume' => 1000.00,
+            'remark' => 'some remark',
             'form_field_answers' => 'invalid_json',
         ];
 
@@ -120,6 +124,7 @@ class DailyVolumeServiceTest extends TestCase
             'customer_id' => 1,
             'customer_site_id' => 1,
             'volume' => 1000.00,
+            'remark' => 'some remark',
         ]);
 
         $data = [
@@ -148,6 +153,7 @@ class DailyVolumeServiceTest extends TestCase
         $data = [
             'id' => $dailyVolume->id,
             'volume' => -100.00, // invalid
+            'remark' => 'some remark',
         ];
 
         $service->update($data);

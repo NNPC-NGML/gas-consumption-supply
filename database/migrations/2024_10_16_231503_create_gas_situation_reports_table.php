@@ -11,14 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('daily_volumes', function (Blueprint $table) {
+        Schema::create('gas_situation_reports', function (Blueprint $table) {
             $table->id();
             $table->bigInteger("customer_id")->comment('customer id');
             $table->bigInteger("customer_site_id")->comment('customer site id');
-            $table->float('volume')->comment('volume in Scf');
-            $table->string('remark')->nullable()->comment('remark, if any');
-            // $table->float('rate')->comment('rate in NGN/Scf, should be picked from current rate in settings');
-            // $table->float('amount')->comment('amount from (volume * rate) in NGN');
+            $table->float('inlet_pressure')->comment('inlet pressure in psi');
+            $table->float('outlet_pressure')->comment('outlet pressure in psi');
+            $table->float('allocation')->comment('allocation in MMscfd');
+            $table->float('nomination')->comment('nomination in MMscfd');
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('daily_volumes');
+        Schema::dropIfExists('gas_situation_reports');
     }
 };
