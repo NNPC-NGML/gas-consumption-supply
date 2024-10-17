@@ -65,6 +65,7 @@ class DailyVolumeResource extends JsonResource
             'customer_id' => $this->customer_id,
             'customer_site_id' => $this->customer_site_id,
             'volume' => $this->volume,
+            'remark' => $this->remark,
             'created_at' => $this->created_at->toDateTimeString(),
             'updated_at' => $this->updated_at->toDateTimeString(),
             'abnormal_status' => $status,

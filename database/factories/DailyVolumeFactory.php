@@ -20,6 +20,7 @@ class DailyVolumeFactory extends Factory
             'customer_id' => fake()->numberBetween(1, 10000),
             'customer_site_id' => fake()->numberBetween(1, 10000),
             'volume' => fake()->randomFloat(2, 0, 1000000),
+            'remark' => fake()->sentence(10),
         ];
     }
 }

@@ -28,12 +28,14 @@ class DailyVolumeService
             'customer_id' => 'required|integer',
             'customer_site_id' => 'required|integer',
             'volume' => 'required|numeric|min:0',
+            'remark' => 'nullable|string',
             // 'rate' => 'required|numeric|min:0',
             // 'amount' => 'required|numeric|min:0',
         ] : [
             'customer_id' => 'sometimes|required|integer',
             'customer_site_id' => 'sometimes|required|integer',
             'volume' => 'sometimes|required|numeric|min:0',
+            'remark' => 'sometimes|nullable|string',
             // 'rate' => 'sometimes|required|numeric|min:0',
             // 'amount' => 'sometimes|required|numeric|min:0',
         ];
