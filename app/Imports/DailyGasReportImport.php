@@ -64,7 +64,7 @@ class DailyGasReportImport implements ToModel, WithHeadingRow
         } catch (\Exception $e) {
             Log::error('Error processing row: ' . $e->getMessage(), ['row' => $row]);
             return null;
-        } 
+        }
     }
 
     public function getLogData()
@@ -98,7 +98,7 @@ class DailyGasReportImport implements ToModel, WithHeadingRow
     private function isValidOffTaker($name)
     {
         foreach ($this->offtakersNames as $offTaker) {
-            if (strcasecmp($offTaker['name'], $name) === 0) {
+            if (strcasecmp(trim($offTaker['name']), trim($name)) === 0) {
                 return true;
             }
         }
