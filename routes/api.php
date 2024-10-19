@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DailyGasReportImportController;
 use App\Http\Controllers\DailyVolumeController;
 use App\Http\Controllers\GasCostController;
 use Illuminate\Http\Request;
@@ -28,7 +29,12 @@ Route::middleware('scope.user')->group(function () {
     Route::get('gas-costs', [GasCostController::class, 'index']);
     Route::get('gas-costs/{id}', [GasCostController::class, 'show']);
     Route::delete('gas-costs/{id}', [GasCostController::class, 'destroy']);
+
+    Route::post('import-daily-gas-report', [DailyGasReportImportController::class, 'import'])->name('daily-gas-report.import');
+
 });
+
+Route::post('import-daily-gas-report', [DailyGasReportImportController::class, 'import'])->name('daily-gas-report.import');
 
 
 
