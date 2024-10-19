@@ -40,7 +40,6 @@ class DailyGasReportImport implements ToModel, WithHeadingRow
     {
         try {
             if (!$this->headerRowFound) {
-                // Check if the row matches the specified header pattern
                 if ($this->isHeaderRow($row)) {
                     $this->headerRowFound = true;
                     return null;
@@ -65,7 +64,7 @@ class DailyGasReportImport implements ToModel, WithHeadingRow
         } catch (\Exception $e) {
             Log::error('Error processing row: ' . $e->getMessage(), ['row' => $row]);
             return null;
-        }
+        } 
     }
 
     public function getLogData()
@@ -90,7 +89,6 @@ class DailyGasReportImport implements ToModel, WithHeadingRow
             null
         ];
 
-        // Trim both arrays before comparing
         $trimmedRow = array_map('trim', $row);
         $trimmedExpectedPattern = array_map('trim', $expectedPattern);
 
