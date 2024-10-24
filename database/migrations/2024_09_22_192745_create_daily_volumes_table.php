@@ -15,9 +15,11 @@ return new class extends Migration
             $table->id();
             $table->bigInteger("customer_id")->comment('customer id');
             $table->bigInteger("customer_site_id")->comment('customer site id');
-            $table->float('volume')->comment('volume in Scf');
-            // $table->float('rate')->comment('rate in NGN/Scf, should be picked from current rate in settings');
-            // $table->float('amount')->comment('amount from (volume * rate) in NGN');
+            $table->float('volume')->comment('volume in mscf');
+            $table->float('inlet_pressure')->comment('inlet pressure in psi')->nullable();
+            $table->float('outlet_pressure')->comment('outlet pressure in psi')->nullable();
+            $table->float('allocation')->comment('allocation in MMscfd')->nullable();
+            $table->float('nomination')->comment('nomination in MMscfd')->nullable();
             $table->timestamps();
         });
     }

@@ -6,6 +6,7 @@ use App\Http\Resources\DailyVolumeResource;
 use App\Services\DailyVolumeService;
 use Illuminate\Http\Request;
 
+
 class DailyVolumeController extends Controller
 {
     /**
@@ -115,17 +116,23 @@ class DailyVolumeController extends Controller
      *     )
      * )
      */
-    public function index(Request $request)
+    public function index(Request $request, $perPage = 50)
     {
+
         try {
             // Get all request parameters for filtering
+            if (isset($request->all()['per_page'])) {
+                $perPage = isset($request->all()['per_page']);
+            }
+            $perPage = $request->input('per_page', default: $perPage);
+
             $filters = $request->all();
 
             // Extract 'per_page' if provided, default to 50
-            $per_page = $request->input('per_page', default: 50);
+
 
             // Pass the filters and per_page to the service for query building
-            $dailyVolumes = $this->dailyVolumeService->getAllWithFilters($filters, $per_page);
+            $dailyVolumes = $this->dailyVolumeService->getAllWithFilters($filters, $perPage);
 
             // Return the paginated results with additional pagination metadata
             return DailyVolumeResource::collection($dailyVolumes)

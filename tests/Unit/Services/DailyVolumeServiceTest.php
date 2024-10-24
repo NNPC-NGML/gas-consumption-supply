@@ -57,6 +57,10 @@ class DailyVolumeServiceTest extends TestCase
             'customer_id' => null,
             'customer_site_id' => '',
             'volume' => -100.00, // invalid
+            'inlet_pressure' => 89.78,
+            'outlet_pressure' => 89.78,
+            'allocation' => 89.78,
+            'nomination' => 89.78,
         ];
 
         $service->validateDailyVolume($data);
@@ -72,17 +76,24 @@ class DailyVolumeServiceTest extends TestCase
         $service = $this->getService();
 
         $data = [
-            'customer_id' => 1,
-            'customer_site_id' => 1,
-            'volume' => 1000.00,
-            'form_field_answers' => json_encode([['key' => 'extra_data', 'value' => 'some_value']]),
+
+            'form_field_answers' => json_encode([
+                ['key' => 'inlet_pressure', 'value' => 89.78,],
+                ['key' => 'outlet_pressure', 'value' => 89.78,],
+                ['key' => 'allocation', 'value' => 89.78,],
+                ['key' => 'nomination', 'value' => 89.78,],
+                ['key' => 'customer_id', 'value' => 1,],
+                ['key' => 'customer_site_id', 'value' => 1,],
+                ['key' => 'volume', 'value' => 89.78,],
+            ]),
         ];
 
         $dailyVolume = $service->create($data);
 
         $this->assertInstanceOf(DailyVolume::class, $dailyVolume);
-        $this->assertEquals($data['customer_id'], $dailyVolume->customer_id);
-        $this->assertEquals($data['customer_site_id'], $dailyVolume->customer_site_id);
+        $this->assertDatabaseCount("daily_volumes", 1);
+        $this->assertEquals(1, $dailyVolume->customer_id);
+        $this->assertEquals(1, $dailyVolume->customer_site_id);
     }
 
     /**

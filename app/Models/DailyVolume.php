@@ -9,7 +9,15 @@ class DailyVolume extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['customer_id', 'customer_site_id', 'volume'];
+    protected $fillable = [
+        'customer_id',
+        'customer_site_id',
+        'volume',
+        'inlet_pressure',
+        'outlet_pressure',
+        'allocation',
+        'nomination',
+    ];
 
     protected $casts = [
         'customer_id' => 'integer',

@@ -22,7 +22,7 @@ Route::middleware('scope.user')->group(function () {
     Route::get('/protected', function () {
         return response()->json(['message' => 'Access granted']);
     });
-    Route::get('daily-volumes', [DailyVolumeController::class, 'index']);
+    Route::get('daily-volumes/{perPage?}', [DailyVolumeController::class, 'index']);
     Route::get('daily-volumes/{id}', [DailyVolumeController::class, 'show']);
     Route::delete('daily-volumes/{id}', [DailyVolumeController::class, 'destroy']);
     Route::get('gas-costs', [GasCostController::class, 'index']);

@@ -67,7 +67,7 @@ class DailyVolumeService
 
         // Apply dynamic filters
         foreach ($filters as $key => $value) {
-            if($key !== 'customer_id' && $key !== 'customer_site_id' && $key !== 'created_at_from' && $key !== 'created_at_to' && $key !== 'updated_at_from' && $key !== 'updated_at_to' && $key !== 'volume') {
+            if ($key !== 'customer_id' && $key !== 'customer_site_id' && $key !== 'created_at_from' && $key !== 'created_at_to' && $key !== 'updated_at_from' && $key !== 'updated_at_to' && $key !== 'volume') {
                 continue;
             }
             switch ($key) {
@@ -125,7 +125,7 @@ class DailyVolumeService
      * @return DailyVolume The newly created daily volume entry.
      * @throws \Throwable
      */
-    public function create(array $data): DailyVolume
+    public function create(array $data)
     {
         Log::info('Starting daily volume creation process', ['data' => $data]);
 
@@ -141,6 +141,7 @@ class DailyVolumeService
 
                     // Optionally, prepare structured data if needed
                     $structuredData = [];
+
                     foreach ($arrayData as $item) {
                         $structuredData[$item['key']] = $item['value'];
                     }
