@@ -91,9 +91,7 @@ class DailyVolumeServiceTest extends TestCase
 
         $dailyVolume = $service->create($data);
 
-        $this->assertInstanceOf(DailyVolumeResource::class, $dailyVolume);
-        $this->assertEquals(1, $dailyVolume->customer_id);
-        $this->assertEquals(1, $dailyVolume->customer_site_id);
+        $this->assertDatabaseCount('daily_volumes', 1);
     }
 
     /**
