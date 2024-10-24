@@ -33,7 +33,7 @@ class DailyVolumeControllerTest extends TestCase
         ];
 
         // Request the first page with a per_page limit of 10
-        $response = $this->getJson('/api/daily-volumes?' . http_build_query(array_merge($filters, ['per_page' => 10])));
+        $response = $this->postJson('/api/daily-volumes/10', $filters);
 
         $response->assertStatus(200)
             ->assertJson([
@@ -48,7 +48,8 @@ class DailyVolumeControllerTest extends TestCase
         $this->assertArrayHasKey('total', $response->json('meta'));
 
         // Now request the second page
-        $response = $this->getJson('/api/daily-volumes?' . http_build_query(array_merge($filters, ['per_page' => 10, 'page' => 2])));
+
+        $response = $this->postJson('/api/daily-volumes/10', ['page' => 2]);
 
         $response->assertStatus(200)
             ->assertJson([

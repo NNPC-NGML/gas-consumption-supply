@@ -27,7 +27,7 @@ class DailyVolumeController extends Controller
     }
 
     /**
-     * @OA\Get(
+     * @OA\Post(
      *     path="/api/daily-volumes",
      *     tags={"Customer daily volumes"},
      *     summary="Get a list of daily volumes with filters and pagination",
@@ -77,6 +77,12 @@ class DailyVolumeController extends Controller
      *     ),
      *     @OA\Parameter(
      *         name="customer_id",
+     *         in="query",
+     *         description="Filter by customer ID",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Parameter(
+     *         name="customer_site_id",
      *         in="query",
      *         description="Filter by customer ID",
      *         @OA\Schema(type="integer")
@@ -162,7 +168,7 @@ class DailyVolumeController extends Controller
      * Get details of a specific Daily Volume record by ID.
      *
      * @OA\Get(
-     *     path="/api/daily-volumes/{id}",
+     *     path="/api/daily-volumes/view/{id}",
      *     tags={"Daily Volumes"},
      *     summary="Get details of a specific Daily Volume record",
      *     description="Fetches details of a specific Daily Volume record by ID.",

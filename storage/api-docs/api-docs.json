@@ -6,13 +6,13 @@
     },
     "paths": {
         "/api/daily-volumes": {
-            "get": {
+            "post": {
                 "tags": [
                     "Customer daily volumes"
                 ],
                 "summary": "Get a list of daily volumes with filters and pagination",
                 "description": "Fetches a list of daily volumes, with optional filtering based on fields in the daily volumes table, and supports pagination.",
-                "operationId": "63ba27cd6514569df699258ddc69f3ad",
+                "operationId": "78ffcb422566f71d0fb8317416c58496",
                 "parameters": [
                     {
                         "name": "page",
@@ -78,6 +78,14 @@
                     },
                     {
                         "name": "customer_id",
+                        "in": "query",
+                        "description": "Filter by customer ID",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "customer_site_id",
                         "in": "query",
                         "description": "Filter by customer ID",
                         "schema": {
@@ -168,14 +176,14 @@
                 }
             }
         },
-        "/api/daily-volumes/{id}": {
+        "/api/daily-volumes/view/{id}": {
             "get": {
                 "tags": [
                     "Daily Volumes"
                 ],
                 "summary": "Get details of a specific Daily Volume record",
                 "description": "Fetches details of a specific Daily Volume record by ID.",
-                "operationId": "22909d113de5ca998096f8222b3a0cb2",
+                "operationId": "4c207938ded7f72412bc0c0cb04c7f04",
                 "parameters": [
                     {
                         "name": "id",
@@ -211,7 +219,9 @@
                         "description": "Not Found"
                     }
                 }
-            },
+            }
+        },
+        "/api/daily-volumes/{id}": {
             "delete": {
                 "tags": [
                     "Daily Volumes"
@@ -244,13 +254,13 @@
             }
         },
         "/api/gas-costs": {
-            "get": {
+            "post": {
                 "tags": [
                     "Gas Costs"
                 ],
                 "summary": "Get a list of gas costs with filters and pagination",
                 "description": "Fetches a list of gas costs, with optional filtering based on fields in the gas costs table, and supports pagination.",
-                "operationId": "20f5161c6ebcad75f67921b0b3c8b56a",
+                "operationId": "365c237750f50f29c358751e4c48450b",
                 "parameters": [
                     {
                         "name": "page",
@@ -372,14 +382,14 @@
                 }
             }
         },
-        "/api/gas-costs/{id}": {
+        "/api/gas-costs/view/{id}": {
             "get": {
                 "tags": [
                     "Gas Costs"
                 ],
                 "summary": "Get details of a specific GasCost record",
                 "description": "Fetches details of a specific GasCost record by ID.",
-                "operationId": "798defd862fbb2692ec0bcfa4ab60a7e",
+                "operationId": "693a3ae53ba096f1b2f4af697d8b07ce",
                 "parameters": [
                     {
                         "name": "id",
@@ -415,14 +425,16 @@
                         "description": "Not Found"
                     }
                 }
-            },
+            }
+        },
+        "/api/gas-costs/delete/{id}": {
             "delete": {
                 "tags": [
                     "Gas Costs"
                 ],
                 "summary": "Delete a specific GasCost record",
                 "description": "Deletes a specific GasCost record by ID.",
-                "operationId": "2856f06f366d35ac6fd00f8c36768f2e",
+                "operationId": "664d71a476b32a3252e51fe96023887b",
                 "parameters": [
                     {
                         "name": "id",
