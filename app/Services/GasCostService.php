@@ -63,7 +63,7 @@ class GasCostService
 
         // Apply dynamic filters
         foreach ($filters as $key => $value) {
-            if($key !== 'date_of_entry' && $key !== 'dollar_cost_per_scf' && $key !== 'dollar_rate' && $key !== 'status' && $key !== 'date_of_entry_from' && $key !== 'date_of_entry_to') {
+            if ($key !== 'date_of_entry' && $key !== 'dollar_cost_per_scf' && $key !== 'dollar_rate' && $key !== 'status' && $key !== 'date_of_entry_from' && $key !== 'date_of_entry_to') {
                 continue;
             }
             switch ($key) {
@@ -140,6 +140,17 @@ class GasCostService
                 // Validate and create the Gas Cost entry
                 $validatedData = $this->validateGasCost($data);
                 $gasCostCreated = GasCost::create($validatedData);
+
+                $gasCost = config("nnpcreusable.GAS_COST_CREATED");
+                if (is_array($gasCost) && !empty($gasCost)) {
+                    foreach ($gasCost as $queue) {
+                        $queue = trim($queue);
+                        if (!empty($queue)) {
+                            Log::info("Dispatching daily volume creation event to queue: " . $queue);
+                            GasCostCreated::dispatch($gasCostCreated->toArray())->onQueue($queue);
+                        }
+                    }
+                }
 
                 return $gasCostCreated;
             } catch (\Throwable $e) {

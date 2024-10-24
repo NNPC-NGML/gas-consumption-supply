@@ -8,19 +8,20 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class GasConsumptionUpdated implements ShouldQueue
+class GasCostCreated implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    public array $data;
+
     /**
      * Create a new job instance.
+     *
+     * @param array $data
      */
-    private $data;
-    private int $id;
     public function __construct(array $data)
     {
         $this->data = $data;
-        $this->id = $data["id"];
     }
 
     /**
