@@ -85,4 +85,8 @@ return [
     'LOCATION_Assignment_UPDATED' => explode(",", env('LOCATION_Assignment_UPDATED', '')),
     'LOCATION_Assignment_DELETED' => explode(",", env('LOCATION_Assignment_DELETED', '')),
 
+    'GAS_CONSUMPTION_CREATED' => explode(",", env('GAS_CONSUMPTION_CREATED', '')),
+    'GAS_CONSUMPTION_UPDATED' => explode(",", env('GAS_CONSUMPTION_UPDATED', '')),
+    'GAS_CONSUMPTION_DELETED' => explode(",", env('GAS_CONSUMPTION_DELETED', '')),
+
 ];

@@ -29,7 +29,7 @@ class DailyVolumeController extends Controller
     /**
      * @OA\Post(
      *     path="/api/daily-volumes",
-     *     tags={"Customer daily volumes"},
+     *     tags={"Daily Volumes"},
      *     summary="Get a list of daily volumes with filters and pagination",
      *     description="Fetches a list of daily volumes, with optional filtering based on fields in the daily volumes table, and supports pagination.",
      *
