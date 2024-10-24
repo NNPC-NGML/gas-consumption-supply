@@ -89,4 +89,8 @@ return [
     'GAS_CONSUMPTION_UPDATED' => explode(",", env('GAS_CONSUMPTION_UPDATED', '')),
     'GAS_CONSUMPTION_DELETED' => explode(",", env('GAS_CONSUMPTION_DELETED', '')),
 
+    'GAS_COST_CREATED' => explode(",", env('GAS_COST_CREATED', '')),
+    'GAS_COST_UPDATED' => explode(",", env('GAS_COST_UPDATED', '')),
+    'GAS_COST_DELETED' => explode(",", env('GAS_COST_DELETED', '')),
+
 ];

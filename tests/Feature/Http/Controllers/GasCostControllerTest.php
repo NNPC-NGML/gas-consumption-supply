@@ -23,7 +23,7 @@ class GasCostControllerTest extends TestCase
         GasCost::factory()->count(15)->create(); // Create 15 records
 
         // Request the first page with a per_page limit of 10
-        $response = $this->getJson('/api/gas-costs?per_page=10');
+        $response = $this->postJson('/api/gas-costs', ["per_page" => 10]);
 
         $response->assertStatus(200)
             ->assertJson([
@@ -38,7 +38,7 @@ class GasCostControllerTest extends TestCase
         $this->assertArrayHasKey('total', $response->json('meta'));
 
         // Now request the second page
-        $response = $this->getJson('/api/gas-costs?per_page=10&page=2');
+        $response = $this->postJson('/api/gas-costs', ["per_page" => 10, "page" => 2]);
 
         $response->assertStatus(200)
             ->assertJson([
@@ -57,7 +57,7 @@ class GasCostControllerTest extends TestCase
         $this->actingAsAuthenticatedTestUser();
         $gasCost = GasCost::factory()->create();
 
-        $response = $this->getJson("/api/gas-costs/{$gasCost->id}");
+        $response = $this->getJson("/api/gas-costs/view/{$gasCost->id}");
 
         $response->assertStatus(200)
             ->assertJson([
@@ -84,7 +84,7 @@ class GasCostControllerTest extends TestCase
         $this->actingAsAuthenticatedTestUser();
         $gasCost = GasCost::factory()->create();
 
-        $response = $this->deleteJson("/api/gas-costs/{$gasCost->id}");
+        $response = $this->deleteJson("/api/gas-costs/delete/{$gasCost->id}");
 
         $response->assertStatus(204);
 

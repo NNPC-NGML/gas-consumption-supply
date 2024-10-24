@@ -12,12 +12,16 @@ class GasConsumptionCreated implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    public array $data;
+
     /**
      * Create a new job instance.
+     *
+     * @param array $data
      */
-    public function __construct()
+    public function __construct(array $data)
     {
-        //
+        $this->data = $data;
     }
 
     /**

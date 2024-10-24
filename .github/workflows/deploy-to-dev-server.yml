@@ -55,12 +55,12 @@ jobs:
       - name: Install rsync
         run: sudo apt-get install -y rsync
 
-      # - name: Find and replace nnpc reusable env variables
-      #   run: |
-      #     sed -i -e 's:AUTOMATOR_TASK_CREATED=forge:AUTOMATOR_TASK_CREATED=sample1,sample2:g' .env &&
-      #     sed -i -e 's:AUTOMATOR_TASK_UPDATED=forge:AUTOMATOR_TASK_UPDATED=sample1,sample2:g' .env &&
-      #     sed -i -e 's:AUTOMATOR_TASK_DELETED=forge:AUTOMATOR_TASK_DELETED=sample1,sample2:g' .env &&
-      #     sed -i -e 's:CUSTOMER_CREATED=forge:CUSTOMER_CREATED=sample1,sample2:g' .env &&
+      - name: Find and replace nnpc reusable env variables
+        run: |
+          sed -i -e 's:GAS_CONSUMPTION_CREATED=forge:GAS_CONSUMPTION_CREATED=billing_queue:g' .env &&
+          sed -i -e 's:GAS_CONSUMPTION_UPDATED=forge:GAS_CONSUMPTION_UPDATED=billing_queue:g' .env &&
+          sed -i -e 's:GAS_CONSUMPTION_DELETED=forge:GAS_CONSUMPTION_DELETED=billing_queue:g' .env &&
+          sed -i -e 's:GAS_COST_CREATED=forge:GAS_COST_CREATED=billing_queue:g' .env
       #     sed -i -e 's:CUSTOMER_UPDATED=forge:CUSTOMER_UPDATED=sample1,sample2:g' .env &&
       #     sed -i -e 's:CUSTOMER_DELETED=forge:CUSTOMER_DELETED=sample1,sample2:g' .env &&
       #     sed -i -e 's:CUSTOMER_SITE_CREATED=forge:CUSTOMER_SITE_CREATED=sample1,sample2:g' .env &&

@@ -70,7 +70,7 @@ class DailyVolumeService
 
         // Apply dynamic filters
         foreach ($filters as $key => $value) {
-            if($key !== 'customer_id' && $key !== 'customer_site_id' && $key !== 'created_at_from' && $key !== 'created_at_to' && $key !== 'updated_at_from' && $key !== 'updated_at_to' && $key !== 'volume') {
+            if ($key !== 'customer_id' && $key !== 'customer_site_id' && $key !== 'created_at_from' && $key !== 'created_at_to' && $key !== 'updated_at_from' && $key !== 'updated_at_to' && $key !== 'volume') {
                 continue;
             }
             switch ($key) {
@@ -128,7 +128,7 @@ class DailyVolumeService
      * @return DailyVolumeResource The resource of the newly created daily volume entry.
      * @throws \Throwable
      */
-    public function create(array $data): DailyVolumeResource
+    public function create(array $data)
     {
         Log::info('Starting daily volume creation process', ['data' => $data]);
 
@@ -144,6 +144,7 @@ class DailyVolumeService
 
                     // Optionally, prepare structured data if needed
                     $structuredData = [];
+
                     foreach ($arrayData as $item) {
                         $structuredData[$item['key']] = $item['value'];
                     }
@@ -157,24 +158,23 @@ class DailyVolumeService
                 $dailyVolume = DailyVolume::create($validatedData);
 
                 // Load relationships
-                $dailyVolume->refresh();
-                $dailyVolume->load(['customer', 'customer_site']);
+                //$dailyVolume->refresh();
+                //$dailyVolume->load(['customer', 'customer_site']);
 
                 // Create a new Daily Volume resource
-                $resource = new DailyVolumeResource($dailyVolume);
 
-                $dailyVolumeQueues = config("nnpcreusable.GAS_CONSUMPTION_CREATED");
-                if (is_array($dailyVolumeQueues) && !empty($dailyVolumeQueues)) {
-                    foreach ($dailyVolumeQueues as $queue) {
-                        $queue = trim($queue);
-                        if (!empty($queue)) {
-                            Log::info("Dispatching daily volume creation event to queue: " . $queue);
-                            GasConsumptionCreated::dispatch($resource)->onQueue($queue);
+                if ($dailyVolume) {
+                    $dailyVolumeQueues = config("nnpcreusable.GAS_CONSUMPTION_CREATED");
+                    if (is_array($dailyVolumeQueues) && !empty($dailyVolumeQueues)) {
+                        foreach ($dailyVolumeQueues as $queue) {
+                            $queue = trim($queue);
+                            if (!empty($queue)) {
+                                Log::info("Dispatching daily volume creation event to queue: " . $queue);
+                                GasConsumptionCreated::dispatch($dailyVolume->toArray())->onQueue($queue);
+                            }
                         }
                     }
                 }
-
-                return $resource;
             } catch (\Throwable $e) {
                 Log::error('Unexpected error during daily volume creation: ' . $e->getMessage(), [
                     'exception' => $e,

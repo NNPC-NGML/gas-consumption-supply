@@ -6,6 +6,7 @@ use App\Http\Resources\DailyVolumeResource;
 use App\Services\DailyVolumeService;
 use Illuminate\Http\Request;
 
+
 class DailyVolumeController extends Controller
 {
     /**
@@ -26,7 +27,7 @@ class DailyVolumeController extends Controller
     }
 
     /**
-     * @OA\Get(
+     * @OA\Post(
      *     path="/api/daily-volumes",
      *     tags={"Daily Volumes"},
      *     summary="Get a list of daily volumes with filters and pagination",
@@ -80,6 +81,12 @@ class DailyVolumeController extends Controller
      *         description="Filter by customer ID",
      *         @OA\Schema(type="integer")
      *     ),
+     *     @OA\Parameter(
+     *         name="customer_site_id",
+     *         in="query",
+     *         description="Filter by customer ID",
+     *         @OA\Schema(type="integer")
+     *     ),
      *
      *     @OA\Response(
      *         response=200,
@@ -115,17 +122,23 @@ class DailyVolumeController extends Controller
      *     )
      * )
      */
-    public function index(Request $request)
+    public function index(Request $request, $perPage = 50)
     {
+
         try {
             // Get all request parameters for filtering
+            if (isset($request->all()['per_page'])) {
+                $perPage = isset($request->all()['per_page']);
+            }
+            $perPage = $request->input('per_page', default: $perPage);
+
             $filters = $request->all();
 
             // Extract 'per_page' if provided, default to 50
-            $per_page = $request->input('per_page', default: 50);
+
 
             // Pass the filters and per_page to the service for query building
-            $dailyVolumes = $this->dailyVolumeService->getAllWithFilters($filters, $per_page);
+            $dailyVolumes = $this->dailyVolumeService->getAllWithFilters($filters, $perPage);
 
             // Return the paginated results with additional pagination metadata
             return DailyVolumeResource::collection($dailyVolumes)
@@ -155,7 +168,7 @@ class DailyVolumeController extends Controller
      * Get details of a specific Daily Volume record by ID.
      *
      * @OA\Get(
-     *     path="/api/daily-volumes/{id}",
+     *     path="/api/daily-volumes/view/{id}",
      *     tags={"Daily Volumes"},
      *     summary="Get details of a specific Daily Volume record",
      *     description="Fetches details of a specific Daily Volume record by ID.",
@@ -182,6 +195,7 @@ class DailyVolumeController extends Controller
      */
     public function show($id)
     {
+
         try {
             // Retrieve Daily Volume by ID
             $dailyVolume = $this->dailyVolumeService->getById($id);

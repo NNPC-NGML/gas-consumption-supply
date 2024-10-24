@@ -26,7 +26,7 @@ class GasCostController extends Controller
     }
 
     /**
-     * @OA\Get(
+     * @OA\Post(
      *     path="/api/gas-costs",
      *     tags={"Gas Costs"},
      *     summary="Get a list of gas costs with filters and pagination",
@@ -124,7 +124,7 @@ class GasCostController extends Controller
      * Get details of a specific GasCost record by ID.
      *
      * @OA\Get(
-     *     path="/api/gas-costs/{id}",
+     *     path="/api/gas-costs/view/{id}",
      *     tags={"Gas Costs"},
      *     summary="Get details of a specific GasCost record",
      *     description="Fetches details of a specific GasCost record by ID.",
@@ -174,7 +174,7 @@ class GasCostController extends Controller
      * Delete a specific GasCost record by ID.
      *
      * @OA\Delete(
-     *     path="/api/gas-costs/{id}",
+     *     path="/api/gas-costs/delete/{id}",
      *     tags={"Gas Costs"},
      *     summary="Delete a specific GasCost record",
      *     description="Deletes a specific GasCost record by ID.",
