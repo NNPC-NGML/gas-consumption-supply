@@ -129,4 +129,4 @@ jobs:
 # change service_name_placeholder to the name of your service eg automator etc  
       - name: SSH and effect migration
         run: |
-          ssh -p 7822 -i ~/.ssh/id_rsa -t skillz@103.72.76.68 "cd nnpc/api/gas && php artisan migrate:fresh "
+          ssh -p 7822 -i ~/.ssh/id_rsa -t skillz@103.72.76.68 "cd nnpc/api/gas && php artisan migrate:fresh && php artisan db:seed"

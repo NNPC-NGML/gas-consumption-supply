@@ -6,7 +6,7 @@ use App\Jobs\User\TagCreated;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Skillz\Nnpcreusable\Models\Tag;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
 
 class TagSeeder extends Seeder
 {
@@ -20,9 +20,14 @@ class TagSeeder extends Seeder
         // Seed new data
         $data = [
             [
-                'name' => 'create EOI',
-                'tag_class' => 'App\controllers\EOIController',
-                'tag_class_method' => 'store',
+                'name' => 'Create Daily Volume Customer',
+                'tag_class' => 'App\Services\DailyVolumeService',
+                'tag_class_method' => 'create',
+            ],
+            [
+                'name' => 'Create Gas Cost',
+                'tag_class' => 'App\Services\GasCostService',
+                'tag_class_method' => 'create',
             ],
         ];
         foreach ($data as $key => $value) {
