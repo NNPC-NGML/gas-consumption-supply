@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Jobs\User\TagCreated;
+use App\Jobs\Tag\TagCreated;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Skillz\Nnpcreusable\Models\Tag;
