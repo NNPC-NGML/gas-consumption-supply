@@ -189,6 +189,7 @@ class DailyVolumeController extends Controller
      */
     public function show($id)
     {
+
         try {
             // Retrieve Daily Volume by ID
             $dailyVolume = $this->dailyVolumeService->getById($id);

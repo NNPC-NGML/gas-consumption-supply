@@ -68,7 +68,7 @@ class DailyVolumeControllerTest extends TestCase
         $this->actingAsAuthenticatedTestUser();
         $dailyVolume = DailyVolume::factory()->create();
 
-        $response = $this->getJson("/api/daily-volumes/{$dailyVolume->id}");
+        $response = $this->getJson("/api/daily-volumes/view/{$dailyVolume->id}");
 
         $response->assertStatus(200)
             ->assertJson([
