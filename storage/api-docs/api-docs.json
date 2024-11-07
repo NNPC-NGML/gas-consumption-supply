@@ -8,7 +8,7 @@
         "/api/daily-volumes": {
             "post": {
                 "tags": [
-                    "Customer daily volumes"
+                    "Daily Volumes"
                 ],
                 "summary": "Get a list of daily volumes with filters and pagination",
                 "description": "Fetches a list of daily volumes, with optional filtering based on fields in the daily volumes table, and supports pagination.",
@@ -462,6 +462,128 @@
     },
     "components": {
         "schemas": {
+            "CustomerResource": {
+                "title": "Customer details",
+                "properties": {
+                    "id": {
+                        "description": "ID of the customer",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "company_name": {
+                        "description": "Name of the customer",
+                        "type": "string",
+                        "example": "Dangote Energy Limited"
+                    },
+                    "email": {
+                        "description": "Email of the customer",
+                        "type": "string",
+                        "example": "ngml@gmail.com"
+                    },
+                    "phone_number": {
+                        "description": "Phone number of the customer",
+                        "type": "string",
+                        "example": "08008000"
+                    },
+                    "status": {
+                        "description": "Status of the customer",
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "created_at": {
+                        "description": "Creation date of the customer",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "description": "Last update date of the customer",
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "CustomerSiteResource": {
+                "title": "Customer site details",
+                "properties": {
+                    "id": {
+                        "description": "ID of the customer site",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "customer_id": {
+                        "description": "ID of the customer",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "site_address": {
+                        "description": "the address of the site",
+                        "type": "string",
+                        "example": 123
+                    },
+                    "ngml_zone_id": {
+                        "description": "the ngml zone of the site",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "site_name": {
+                        "description": "the name of the site",
+                        "type": "string",
+                        "example": 123
+                    },
+                    "site_contact_person_name": {
+                        "description": "the name of the site contact person",
+                        "type": "string",
+                        "example": 1
+                    },
+                    "email": {
+                        "description": "the email of the site contact person",
+                        "type": "string",
+                        "example": "ngml@gmail.com"
+                    },
+                    "site_contact_person_signature": {
+                        "description": "site contact person signature",
+                        "type": "string",
+                        "example": "/path/to/file.png"
+                    },
+                    "site_contact_person_email": {
+                        "description": "site contact person email",
+                        "type": "string",
+                        "example": "ngml@gmail.com"
+                    },
+                    "site_existing_status": {
+                        "description": "site existing status",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "phone_number": {
+                        "description": "the phone number of the site contact person",
+                        "type": "string",
+                        "example": 229903999
+                    },
+                    "site_contact_person_phone_number": {
+                        "description": "the phone number of the site contact person",
+                        "type": "string",
+                        "example": 8000000
+                    },
+                    "status": {
+                        "description": "site status",
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "created_at": {
+                        "description": "Creation date of the site",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "description": "Last update date of the site",
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
             "DailyVolume": {
                 "title": "Daily Volume",
                 "properties": {
@@ -500,6 +622,12 @@
                         "description": "Updated at",
                         "type": "string",
                         "format": "date-time"
+                    },
+                    "customer": {
+                        "$ref": "#/components/schemas/CustomerResource"
+                    },
+                    "customer_site": {
+                        "$ref": "#/components/schemas/CustomerSiteResource"
                     }
                 },
                 "type": "object"
@@ -551,10 +679,6 @@
         }
     },
     "tags": [
-        {
-            "name": "Customer daily volumes",
-            "description": "Customer daily volumes"
-        },
         {
             "name": "Daily Volumes",
             "description": "Daily Volumes"
