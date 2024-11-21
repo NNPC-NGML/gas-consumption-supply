@@ -33,9 +33,9 @@ class FormDataUpdated implements ShouldQueue
     public function handle(): void
     {
         $tagModel = Tag::all();
-        $fetschedData = $this->data['tag']["name"];
+        $fetchedData = $this->data["form_builder"]['tag']["name"];
         foreach ($tagModel as $tag) {
-            if ($tag->name == $fetschedData) {
+            if ($tag->name == $fetchedData) {
                 $operationClass = new $tag->tag_class();
                 $operationClass->{$tag->tag_class_method}($this->data);
             }

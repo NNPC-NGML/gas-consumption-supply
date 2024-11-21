@@ -31,9 +31,9 @@ class FormDataCreated implements ShouldQueue
         // this would be used by other services to determine how to handle the data that comes 
         // get all tags 
         $tagModel = Tag::all();
-        $fetschedData = $this->data['tag']["name"];
+        $fetchedData = $this->data["form_builder"]['tag']["name"];
         foreach ($tagModel as $tag) {
-            if ($tag->name == $fetschedData) {
+            if ($tag->name == $fetchedData) {
                 $operationClass = new $tag->tag_class();
                 $operationClass->{$tag->tag_class_method}($this->data);
             }
