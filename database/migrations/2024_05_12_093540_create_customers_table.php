@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('customers', function (Blueprint $table) {
             $table->bigInteger('id')->primary();
             $table->string('company_name');
-            $table->string('company_email')->unique();
+            $table->string('company_email')->nullable()->unique();
             $table->boolean('is_active')->default(0);
             $table->timestamps();
         });

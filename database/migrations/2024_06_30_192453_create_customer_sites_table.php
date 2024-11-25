@@ -15,11 +15,11 @@ return new class extends Migration
             $table->bigInteger('id')->primary();
             $table->string('site_name');
             $table->string('customer_id');
-            $table->string('site_email')->unique();
-            $table->string('site_address');
-            $table->integer('site_state_id');
-            $table->integer('site_lga_id');
-            $table->integer('site_zone_id');
+            $table->string('site_email')->nullable()->unique();
+            $table->string('site_address')->nullable();
+            $table->integer('site_state_id')->nullable();
+            $table->integer('site_lga_id')->nullable();
+            $table->integer('site_zone_id')->nullable();
             $table->string('rate')->nullable()->comment("this holds the value agreed between both parties");
             $table->boolean('is_active')->default(0);
             $table->timestamps();
