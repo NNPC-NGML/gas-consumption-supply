@@ -68,8 +68,8 @@ class DailyVolumeResource extends JsonResource
             'created_at' => $this->created_at->toDateTimeString(),
             'updated_at' => $this->updated_at->toDateTimeString(),
             'abnormal_status' => $status,
-            'customer' => new CustomerResource($this->whenLoaded('customer')),
-            'customer_site' => new CustomerSiteResource($this->whenLoaded('customer_site')),
+            'customer' => new CustomerResource($this->customer),
+            'customer_site' => new CustomerSiteResource($this->customer_site),
         ];
     }
 }
