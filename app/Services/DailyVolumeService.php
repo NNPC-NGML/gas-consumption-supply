@@ -155,7 +155,7 @@ class DailyVolumeService
 
                 // Validate and create the Daily Volume entry
                 $validatedData = $this->validateDailyVolume($data);
-                $dailyVolume = DailyVolume::create($validatedData);
+                $dailyVolume = DailyVolume::create($data);
 
                 // Load relationships
                 //$dailyVolume->refresh();
