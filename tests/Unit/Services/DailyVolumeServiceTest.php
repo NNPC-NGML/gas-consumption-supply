@@ -87,9 +87,11 @@ class DailyVolumeServiceTest extends TestCase
                 ['key' => 'customer_site_id', 'value' => 1,],
                 ['key' => 'volume', 'value' => 89.78,],
             ]),
+            "user_id" => 1,
         ];
 
-        $dailyVolume = $service->create($data);
+        $service->create($data);
+
 
         $this->assertDatabaseCount('daily_volumes', 1);
     }
@@ -128,6 +130,7 @@ class DailyVolumeServiceTest extends TestCase
             'customer_id' => 1,
             'customer_site_id' => 1,
             'volume' => 1000.00,
+            'created_by' => 1,
         ]);
 
         $data = [
@@ -151,7 +154,9 @@ class DailyVolumeServiceTest extends TestCase
 
         $service = $this->getService();
 
-        $dailyVolume = DailyVolume::factory()->create();
+        $dailyVolume = DailyVolume::factory()->create([
+            'created_by' => 1,
+        ]);
 
         $data = [
             'id' => $dailyVolume->id,

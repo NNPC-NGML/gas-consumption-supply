@@ -20,6 +20,8 @@ return new class extends Migration
             $table->float('outlet_pressure')->comment('outlet pressure in psi')->nullable();
             $table->float('allocation')->comment('allocation in MMscfd')->nullable();
             $table->float('nomination')->comment('nomination in MMscfd')->nullable();
+            $table->integer('status')->comment('volume status')->default(0);
+            $table->integer('created_by')->comment('who entered the record');
             $table->timestamps();
         });
     }
