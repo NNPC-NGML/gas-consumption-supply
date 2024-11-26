@@ -10,6 +10,8 @@ use Skillz\Nnpcreusable\Models\CustomerSite;
 class DailyVolume extends Model
 {
     use HasFactory;
+    const  APPROVED = 1;
+    const  PENDING = 0;
 
     protected $fillable = [
         'customer_id',
@@ -19,6 +21,7 @@ class DailyVolume extends Model
         'outlet_pressure',
         'allocation',
         'nomination',
+        'created_by',
     ];
 
     protected $casts = [

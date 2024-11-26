@@ -143,7 +143,7 @@ class DailyVolumeService
                     }
 
                     // Optionally, prepare structured data if needed
-                    $structuredData = [];
+                    $structuredData = ["created_by" => $data['user_id']];
 
                     foreach ($arrayData as $item) {
                         $structuredData[$item['key']] = $item['value'];

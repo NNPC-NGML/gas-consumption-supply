@@ -23,6 +23,7 @@ class DailyVolumeControllerTest extends TestCase
         // Create some dummy data
         DailyVolume::factory()->count(15)->create([ // Create 15 records
             'customer_id' => 1,
+            'created_by' => 1,
         ]);
 
         // Example filter parameters
@@ -67,7 +68,11 @@ class DailyVolumeControllerTest extends TestCase
     public function test_it_can_view_a_single_daily_volume()
     {
         $this->actingAsAuthenticatedTestUser();
-        $dailyVolume = DailyVolume::factory()->create();
+        $dailyVolume = DailyVolume::factory()->create(
+            [
+                'created_by' => 1,
+            ]
+        );
 
         $response = $this->getJson("/api/daily-volumes/view/{$dailyVolume->id}");
 
@@ -92,7 +97,11 @@ class DailyVolumeControllerTest extends TestCase
     public function test_it_can_delete_a_daily_volume()
     {
         $this->actingAsAuthenticatedTestUser();
-        $dailyVolume = DailyVolume::factory()->create();
+        $dailyVolume = DailyVolume::factory()->create(
+            [
+                'created_by' => 1,
+            ]
+        );
 
         $response = $this->deleteJson("/api/daily-volumes/{$dailyVolume->id}");
 

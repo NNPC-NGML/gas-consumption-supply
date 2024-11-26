@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\DailyVolume;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -65,11 +66,16 @@ class DailyVolumeResource extends JsonResource
             'customer_id' => $this->customer_id,
             'customer_site_id' => $this->customer_site_id,
             'volume' => $this->volume,
+            'inlet' => $this->inlet_pressure,
+            'outlet' => $this->outlet_pressure,
+            'nomination' => $this->nomination,
+            'allocation' => $this->allocation,
             'created_at' => $this->created_at->toDateTimeString(),
             'updated_at' => $this->updated_at->toDateTimeString(),
             'abnormal_status' => $status,
             'customer' => new CustomerResource($this->customer),
             'customer_site' => new CustomerSiteResource($this->customer_site),
+            'status' => $this->status == DailyVolume::APPROVED ? 'Approved' : 'Pending',
         ];
     }
 }
