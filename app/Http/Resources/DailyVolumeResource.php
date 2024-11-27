@@ -73,6 +73,8 @@ class DailyVolumeResource extends JsonResource
             'created_at' => $this->created_at->toDateTimeString(),
             'updated_at' => $this->updated_at->toDateTimeString(),
             'abnormal_status' => $status,
+            'approved_by' => $this->approved_by,
+            'created_by' => $this->created_by,
             'customer' => new CustomerResource($this->customer),
             'customer_site' => new CustomerSiteResource($this->customer_site),
             'status' => $this->status == DailyVolume::APPROVED ? 'Approved' : 'Pending',
