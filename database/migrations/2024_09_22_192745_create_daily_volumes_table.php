@@ -22,6 +22,7 @@ return new class extends Migration
             $table->float('nomination')->comment('nomination in MMscfd')->nullable();
             $table->integer('status')->comment('volume status')->default(0);
             $table->integer('created_by')->comment('who entered the record');
+            $table->integer('approved_by')->default(0)->comment('who entered the record');
             $table->timestamps();
         });
     }

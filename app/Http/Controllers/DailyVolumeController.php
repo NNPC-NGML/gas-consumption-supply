@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\DailyVolumeResource;
-use App\Services\DailyVolumeService;
+use App\Models\DailyVolume;
 use Illuminate\Http\Request;
+use App\Services\DailyVolumeService;
+use App\Http\Resources\DailyVolumeResource;
 
 
 class DailyVolumeController extends Controller
@@ -253,6 +254,36 @@ class DailyVolumeController extends Controller
                 'status' => 'success',
                 'message' => 'Daily Volume record deleted successfully'
             ], 204);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Daily Volume record not found',
+            ], 404);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $th->getMessage(),
+            ], 400);
+        }
+    }
+
+    public function approveVolume($id)
+    {
+        $userId = auth()->id();
+
+        try {
+
+            $dailyVolume = $this->dailyVolumeService->getById($id);
+            $approveVolume = $dailyVolume->update([
+                'status' => 1,
+                'approved_by' => $userId
+            ]);
+            if ($approveVolume) {
+                $dailyVolume = $this->dailyVolumeService->getById($id);
+                return (new DailyVolumeResource($dailyVolume))
+                    ->additional(['status' => 'success'])
+                    ->response();
+            }
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             return response()->json([
                 'status' => 'error',

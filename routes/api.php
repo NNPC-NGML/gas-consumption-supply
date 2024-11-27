@@ -25,6 +25,7 @@ Route::middleware('scope.user')->group(function () {
     Route::post('daily-volumes/{perPage?}', [DailyVolumeController::class, 'index']);
     Route::get('daily-volumes/view/{id}', [DailyVolumeController::class, 'show']);
     Route::delete('daily-volumes/{id}', [DailyVolumeController::class, 'destroy']);
+    Route::get('daily-volumes/approve/{id}', [DailyVolumeController::class, 'approveVolume']);
     Route::post('gas-costs', [GasCostController::class, 'index']);
     Route::get('gas-costs/view/{id}', [GasCostController::class, 'show']);
     Route::delete('gas-costs/delete/{id}', [GasCostController::class, 'destroy']);

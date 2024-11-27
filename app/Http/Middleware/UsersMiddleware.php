@@ -2,10 +2,12 @@
 
 namespace App\Http\Middleware;
 
+use Illuminate\Support\Facades\Log;
 use Closure;
 use Skillz\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+
 
 class UsersMiddleware
 {

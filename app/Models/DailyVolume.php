@@ -22,6 +22,8 @@ class DailyVolume extends Model
         'allocation',
         'nomination',
         'created_by',
+        'approved_by',
+        'status',
     ];
 
     protected $casts = [

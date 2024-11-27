@@ -111,4 +111,34 @@ class DailyVolumeControllerTest extends TestCase
             'id' => $dailyVolume->id,
         ]);
     }
+
+    /**
+     * Test that a daily volume can be approved .
+     *
+     * @return void
+     */
+    public function test_a_daily_volume_can_be_approved()
+    {
+        $this->actingAsAuthenticatedTestUser();
+
+        $dailyVolume = DailyVolume::factory()->create(
+            [
+                'created_by' => 1,
+                'status' => DailyVolume::PENDING,
+            ]
+        );
+
+        $response = $this->getJson("/api/daily-volumes/approve/{$dailyVolume->id}");
+        $response->assertStatus(200)
+            ->assertJson([
+                'status' => 'success',
+                'data' => [
+                    'id' => $dailyVolume->id,
+                    'customer_id' => $dailyVolume->customer_id,
+                    'volume' => $dailyVolume->volume,
+                    'status' => "Approved",
+                    'approved_by' => 1,
+                ],
+            ]);
+    }
 }
