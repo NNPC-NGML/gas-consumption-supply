@@ -19,7 +19,7 @@ class CustomerSiteCreated implements ShouldQueue
      *
      * @var array
      */
-    public array $data;
+    public  $data;
 
     /**
      * Create a new job instance.

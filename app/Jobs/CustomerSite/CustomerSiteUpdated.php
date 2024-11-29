@@ -19,7 +19,7 @@ class CustomerSiteUpdated implements ShouldQueue
      *
      * @var array
      */
-    private array $data;
+    private  $data;
 
     /**
      * The ID of the department to be updated.
