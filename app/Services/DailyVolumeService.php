@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Carbon;
 
 class DailyVolumeService
 {
@@ -143,8 +144,10 @@ class DailyVolumeService
                     }
 
                     // Optionally, prepare structured data if needed
-                    $structuredData = ["created_by" => $data['user_id']];
-
+                    $structuredData = [
+                        "created_by" => $data['user_id'],
+                        "created_at" => Carbon::parse($data["created_at"])->subDay(),
+                    ];
                     foreach ($arrayData as $item) {
                         $structuredData[$item['key']] = $item['value'];
                     }
