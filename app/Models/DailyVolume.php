@@ -24,6 +24,7 @@ class DailyVolume extends Model
         'created_by',
         'approved_by',
         'status',
+        'created_at',
     ];
 
     protected $casts = [
